@@ -28,9 +28,7 @@ import java.util.Arrays;
 
 public class GeocodeInterface
 {
-    private final GeoApiContext context = new GeoApiContext.Builder()
-            .apiKey("YourApiKey")
-            .build();
+    private final GeoApiContext context = new BuildGeoApiContext().BuildContext();
 
     public GeocodingResult[] GetAddress(Double lat, Double lng)
     {
@@ -80,6 +78,7 @@ public class GeocodeInterface
             System.out.println(ioEx.getMessage());
         }
 
+        context.shutdown();
         return results;
     }
 }

@@ -10,18 +10,17 @@ public class BuildGeoApiContext
 
     private final InputStream input = GeocodeInterface.class.getClassLoader().getResourceAsStream("scratch.properties");
 
-    private String apiKey;
-
     public GeoApiContext BuildContext()
     {
         GeoApiContext context;
         try
         {
+            props.load(input);
+            String apiKey = props.getProperty("api.key");
+
             context = new GeoApiContext.Builder()
                     .apiKey(apiKey)
                     .build();
-            props.load(input);
-            apiKey = props.getProperty("api.key");
         }catch(Exception ex)
         {
             context = null;
