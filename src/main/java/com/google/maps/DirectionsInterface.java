@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class DirectionsInterface
 {
     private final GeoApiContext context = new GeoApiContext.Builder()
-            .apiKey("AIzaSyATEPZwUuEBs8kAi_TGAUL7_i1qpIr03rY")
+            .apiKey("YourApiKey")
             .build();
 
     public DirectionsResult GetDirections(String origin, String destination)
