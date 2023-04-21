@@ -13,6 +13,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class ClientDeliveryController
 {
+    public static final GeoApiContext apiContext = new BuildGeoApiContext().BuildContext();
+
     private final static DirectionsInterface directionsInterface = new DirectionsInterface();
     private final static ThreadingApisForCoords threadingApisForCoords = new ThreadingApisForCoords();
     private final static ThreadingApisForAddrs threadingApisForAddrs = new ThreadingApisForAddrs();
@@ -55,7 +57,7 @@ public class ClientDeliveryController
         for(LinkedList<Double> inter : buildGraph.graph)
         {
             System.out.println("ID: " + buildGraph.graph.indexOf(inter));
-            for(Double item : inter)
+            for(double item : inter)
             {
                 System.out.println(item);
             }
@@ -87,6 +89,8 @@ public class ClientDeliveryController
             System.out.println("Address:");
             System.out.println(addr);
         }
+
+        apiContext.shutdown();
     }
 
     private static ArrayList<String> GetInput()
@@ -95,7 +99,7 @@ public class ClientDeliveryController
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String homeAddress, input = "init";
+            String homeAddress, input;
             System.out.println("Enter a home address:");
             homeAddress = br.readLine();
             inputs.add(homeAddress);

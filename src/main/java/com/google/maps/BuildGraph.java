@@ -32,11 +32,15 @@ public class BuildGraph
 {
     LinkedList<LinkedList<Double>> graph;
     Vertex[] vertices;
+    DrivingDistance findDistance = new DrivingDistance();
+
 
     public BuildGraph(ArrayList<LatLng> points)
     {
+        //the points arrayList contains coordinate pairs of longitudes and latitudse
         vertices = new Vertex[points.size()];
         graph = new LinkedList<>();
+
         for(int i = 0; i < points.size(); i++)
         {
             vertices[i] = new Vertex(i);
@@ -50,7 +54,7 @@ public class BuildGraph
                     continue;
                 }
 
-                Double distance = distanceFormula(points.get(i), points.get(j));
+                double distance = findDistance.CalculateDrivingDistance(points.get(i), points.get(j));
                 graph.get(i).add(distance);
             }
         }
@@ -64,7 +68,7 @@ public class BuildGraph
                     vertices[i].adjacencies[j] = new Edge(vertices[i], Double.POSITIVE_INFINITY);
                     continue;
                 }
-                Double distance = distanceFormula(points.get(i), points.get(j));
+                double distance = findDistance.CalculateDrivingDistance(points.get(i), points.get(j));
                 vertices[i].adjacencies[j] = new Edge(vertices[j] , distance);
             }
         }
@@ -78,17 +82,5 @@ public class BuildGraph
 
         Collections.reverse(path);
         return path;
-    }
-
-    public double distanceFormula(LatLng point1, LatLng point2)
-    {
-        Double result;
-
-        Double xs = Math.pow((point2.lat - point1.lat), 2);
-        Double ys = Math.pow((point2.lng - point1.lng), 2);
-
-        result = Math.sqrt((xs + ys));
-
-        return result;
     }
 }
