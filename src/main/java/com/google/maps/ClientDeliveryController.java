@@ -14,12 +14,9 @@ import static org.junit.Assert.assertNotNull;
 public class ClientDeliveryController
 {
     public static final GeoApiContext apiContext = new BuildGeoApiContext().BuildContext();
-
-    private final static DirectionsInterface directionsInterface = new DirectionsInterface();
     private final static ThreadingApisForCoords threadingApisForCoords = new ThreadingApisForCoords();
     private final static ThreadingApisForAddrs threadingApisForAddrs = new ThreadingApisForAddrs();
 
-    private static BuildGraph buildGraph;
 
     public static void main(String[] args)
     {
@@ -42,29 +39,7 @@ public class ClientDeliveryController
 
         assertNotNull(latLngs);
 
-        buildGraph = new BuildGraph(latLngs);
-
-        /*
-        for(Vertex v : buildGraph.vertices)
-        {
-            System.out.println("ID: " + v.ID);
-            for(Edge e : v.adjacencies)
-            {
-                System.out.println("Target: " + e.target + " Weight: " + e.weight);
-            }
-        }*/
-
-        for(LinkedList<Double> inter : buildGraph.graph)
-        {
-            System.out.println("ID: " + buildGraph.graph.indexOf(inter));
-            for(double item : inter)
-            {
-                System.out.println(item);
-            }
-        }
-
-
-        ArrayList<String> adresses = new ArrayList<>();
+        ArrayList<String> addresses = new ArrayList<>();
 
         try
         {
@@ -73,7 +48,7 @@ public class ClientDeliveryController
                 System.out.println("Latitude: " + latLng.lat + " Longitude: " + latLng.lng);
                 threadingApisForAddrs.run(latLng);
                 threadingApisForAddrs.join();
-                adresses.add(threadingApisForAddrs.GetResults());
+                addresses.add(threadingApisForAddrs.GetResults());
             }
         }
         catch(InterruptedException interruptedException)
@@ -82,9 +57,9 @@ public class ClientDeliveryController
             System.out.println(interruptedException.getMessage());
         }
 
-        assertNotNull(adresses);
+        assertNotNull(addresses);
 
-        for(String addr : adresses)
+        for(String addr : addresses)
         {
             System.out.println("Address:");
             System.out.println(addr);
