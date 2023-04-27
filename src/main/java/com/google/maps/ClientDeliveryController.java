@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -21,7 +21,7 @@ public class ClientDeliveryController
     public static void main(String[] args)
     {
         ArrayList<String> inputs = GetInput();
-        ArrayList<LatLng> latLngs = new ArrayList<>();
+        List<LatLng> latLngs = new ArrayList<>();
         try
         {
             for (String input: inputs)
@@ -38,6 +38,17 @@ public class ClientDeliveryController
         }
 
         assertNotNull(latLngs);
+
+        PathSolver newSolution = new PathSolver();
+        try
+        {
+            newSolution.solve(latLngs);
+            latLngs = newSolution.getTour();
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
 
         ArrayList<String> addresses = new ArrayList<>();
 
