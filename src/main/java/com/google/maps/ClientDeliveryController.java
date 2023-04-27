@@ -1,30 +1,37 @@
 package com.google.maps;
 
+import com.google.gson.Gson;
 import com.google.maps.model.LatLng;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import static org.junit.Assert.assertNotNull;
 
-
+@SpringBootApplication
+@RestController
 public class ClientDeliveryController
 {
+    public static void main(String[] args) {
+        SpringApplication.run(ClientDeliveryController.class, args);
+    }
     public static final GeoApiContext apiContext = new BuildGeoApiContext().BuildContext();
     private final static ThreadingApisForCoords threadingApisForCoords = new ThreadingApisForCoords();
     private final static ThreadingApisForAddrs threadingApisForAddrs = new ThreadingApisForAddrs();
 
-
-    public static void main(String[] args)
+    @PostMapping("/optimize-route")
+    public String optimizeRoute(@RequestBody List<String> inputAddresses)
     {
-        ArrayList<String> inputs = GetInput();
         List<LatLng> latLngs = new ArrayList<>();
         try
         {
-            for (String input: inputs)
+            for (String input: inputAddresses)
             {
                 threadingApisForCoords.run(input);
                 threadingApisForCoords.join();
@@ -68,6 +75,8 @@ public class ClientDeliveryController
             System.out.println(interruptedException.getMessage());
         }
 
+        addresses.add(inputAddresses.get(0));
+
         assertNotNull(addresses);
 
         for(String addr : addresses)
@@ -77,34 +86,10 @@ public class ClientDeliveryController
         }
 
         apiContext.shutdown();
-    }
 
-    private static ArrayList<String> GetInput()
-    {
-        ArrayList<String> inputs = new ArrayList<>();
-        try
-        {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String homeAddress, input;
-            System.out.println("Enter a home address:");
-            homeAddress = br.readLine();
-            inputs.add(homeAddress);
-            while(true)
-            {
-                System.out.println("Enter address or 'done':");
-                input = br.readLine();
-                if(input.equalsIgnoreCase("done"))
-                {
-                    break;
-                }
-                inputs.add(input);
-            }
-        }
-        catch(IOException ioException)
-        {
-            System.out.println(ioException.getMessage());
-        }
+        Gson gson = new Gson();
+        String optimizedRoute = gson.toJson(latLngs);
 
-        return inputs;
+        return optimizedRoute;
     }
 }
