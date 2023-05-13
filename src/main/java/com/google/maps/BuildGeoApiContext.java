@@ -1,14 +1,20 @@
 package com.google.maps;
 
+import jakarta.annotation.PreDestroy;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+
 import java.io.InputStream;
 import java.util.Properties;
-import java.net.URL;
 
 //loads the api key from a non-public property
+@Component
+@RequestScope
 public class BuildGeoApiContext
 {
+    private GeoApiContext apiContext;
 
-    public GeoApiContext BuildContext()
+    public BuildGeoApiContext()
     {
         Properties props = new Properties();
         InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("ApiConnection.properties");
@@ -27,6 +33,15 @@ public class BuildGeoApiContext
             ex.printStackTrace();
         }
 
-        return context;
+        this.apiContext = context;
+    }
+    public GeoApiContext get()
+    {
+        return apiContext;
+    }
+    @PreDestroy
+    public void close()
+    {
+        apiContext.shutdown();
     }
 }

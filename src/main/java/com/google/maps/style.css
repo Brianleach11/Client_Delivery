@@ -1,0 +1,23 @@
+#map {
+    height: 100%;
+}
+
+#address-form {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: lightgray;
+    padding: 10px;
+    border: 1px solid black;
+    z-index: 1;
+}
+
+/*
+ * Optional: Makes the sample page fill the window.
+ */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
